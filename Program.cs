@@ -8,9 +8,10 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
-builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("con")));
-var app = builder.Build();
+builder.Services.AddDbContext<AppDbContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("con")));
 
+// Add Identity services before building the app.
 builder.Services.AddIdentity<User, IdentityRole>(options =>
 {
     options.Password.RequireNonAlphanumeric = false;
@@ -25,6 +26,9 @@ builder.Services.AddIdentity<User, IdentityRole>(options =>
     .AddEntityFrameworkStores<AppDbContext>()
     .AddDefaultTokenProviders();
 
+// Build the application after all services are configured.
+var app = builder.Build();
+
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
@@ -38,6 +42,8 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
+// Add authentication middleware (required for Identity).
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllerRoute(
