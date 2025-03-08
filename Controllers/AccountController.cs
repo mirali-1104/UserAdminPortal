@@ -27,33 +27,43 @@ namespace UserAdminPortal.Controllers
         [HttpPost]
         public async Task<IActionResult> Register(RegisterViewModel model)
         {
-            if (ModelState.IsValid)
+ 
+            if (!ModelState.IsValid)
             {
-                User users = new User
+                User user = new User
                 {
                     FullName = model.Name,
                     Email = model.Email,
                     UserName = model.Email,
                 };
 
-                var result = await userManager.CreateAsync(users, model.Password);
+                var result = await userManager.CreateAsync(user, model.Password);
 
                 if (result.Succeeded)
                 {
+                    Console.WriteLine("User registered successfully"); // Debugging
                     return RedirectToAction("Login", "Account");
                 }
                 else
                 {
+                    Console.WriteLine("User registration failed"); // Debugging
                     foreach (var error in result.Errors)
                     {
+                        Console.WriteLine(error.Description);
                         ModelState.AddModelError("", error.Description);
                     }
 
                     return View(model);
                 }
             }
+            else
+            {
+                Console.WriteLine("User registration failed");
+            }
+
             return View(model);
         }
+
 
         public IActionResult VerifyEmail()
         {
