@@ -1,0 +1,37 @@
+﻿@model IEnumerable<UserAdminPortal.Models.User>
+
+@{
+    ViewData["Title"] = "User Report";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>User Report</h2>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Full Name</th>
+            <th>User Name</th>
+            <th>Email</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var user in Model)
+        {
+            <tr>
+                <td>@user.FullName</td>
+                <td>@user.UserName</td>
+                <td>@user.Email</td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@user.Id" class="btn btn-warning btn-sm">Edit</a>
+                    <a asp-action="Delete" asp-route-id="@user.Id" class="btn btn-danger btn-sm">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<div>
+    <a asp-action="Dashboard" class="btn btn-primary">Back to Dashboard</a>
+</div>

@@ -23,5 +23,7 @@ namespace UserAdminPortal.ViewModel
         [DataType(DataType.Password)]
         public string ConfirmPassword { get; set; }
         public string ConfirmPasswordConfirmation { get;set; }
+
+        public string UserName { get; set; }
     }
 }
