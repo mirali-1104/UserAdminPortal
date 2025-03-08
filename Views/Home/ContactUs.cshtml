@@ -1,0 +1,78 @@
+﻿@{
+    ViewData["Title"] = "Contact Us";
+}
+
+<h2 class="text-center mb-4">Contact Us</h2>
+
+<div class="container mb-5">
+    <div class="row">
+        <!-- Contact Form -->
+        <div class="col-md-6 mb-4">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title text-primary mb-3">Get in Touch</h5>
+                    <form>
+                        <div class="mb-3">
+                            <label for="name" class="form-label">Your Name</label>
+                            <input type="text" class="form-control" id="name" placeholder="Enter your name" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="email" class="form-label">Email Address</label>
+                            <input type="email" class="form-control" id="email" placeholder="Enter your email" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="subject" class="form-label">Subject</label>
+                            <input type="text" class="form-control" id="subject" placeholder="Enter subject">
+                        </div>
+                        <div class="mb-3">
+                            <label for="message" class="form-label">Message</label>
+                            <textarea class="form-control" id="message" rows="4" placeholder="Your message" required></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100">Send Message</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Contact Details & Map -->
+        <div class="col-md-6 mb-4">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title text-primary mb-3">Contact Information</h5>
+                    <ul class="list-unstyled mb-4">
+                        <li><i class="bi bi-geo-alt-fill text-primary"></i> 123 Real Estate Street, City, State</li>
+                        <li><i class="bi bi-telephone-fill text-primary"></i> +1 234 567 890</li>
+                        <li><i class="bi bi-envelope-fill text-primary"></i> info@realestate.com</li>
+                    </ul>
+
+                    <h6 class="text-primary mb-2">Our Location</h6>
+                    <div class="ratio ratio-16x9 shadow-sm mb-3">
+                        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3151.835434508618!2d144.9556513158449!3d-37.81732797975171!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x6ad65d5e0f0f9e57%3A0x5045675218ce7e0!2sVictoria%20State%20Library!5e0!3m2!1sen!2sin!4v1611976100864!5m2!1sen!2sin"
+                                style="border:0;" allowfullscreen="" loading="lazy"></iframe>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts{
+    <script>
+        function initMap() {
+            
+            var location = { lat: 40.730610, lng: -73.935242 }; 
+
+            
+            var map = new google.maps.Map(document.getElementById("map"), {
+                zoom: 12,
+                center: location,
+            });
+
+            
+            var marker = new google.maps.Marker({
+                position: location,
+                map: map,
+                title: "Our Office Location",
+            });
+        }
+    </script>
+}
