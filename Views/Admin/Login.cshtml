@@ -1,0 +1,40 @@
+﻿@using UserAdminPortal.ViewModel;
+@model LoginAdminViewModel;
+
+@{
+    ViewData["Title"] = "Admin Login";
+    Layout = "~/Views/Shared/_AccountLayout.cshtml";
+}
+
+<div class="account-container">
+    <div class="account-box">
+        <h2 class="text-center mb-4">Admin Login</h2>
+        <form asp-action="Login" asp-controller="Admin" method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <div class="mb-3">
+                <label asp-for="Email" class="form-label"></label>
+                <input asp-for="Email" class="form-control" />
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Password" class="form-label"></label>
+                <input asp-for="Password" type="password" class="form-control" />
+                <span asp-validation-for="Password" class="text-danger"></span>
+            </div>
+
+            <input type="submit" value="Login" class="btn btn-success w-100 p-2" />
+
+            <div class="text-center mt-3">
+                <a asp-controller="Home" asp-action="Index" class="text-decoration-none">Back</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial.cshtml");
+    }
+}

@@ -26,6 +26,13 @@ builder.Services.AddIdentity<User, IdentityRole>(options =>
     .AddEntityFrameworkStores<AppDbContext>()
     .AddDefaultTokenProviders();
 
+// Enable session services
+builder.Services.AddSession();
+
+// Add HTTP context accessor
+builder.Services.AddHttpContextAccessor();
+
+
 // Build the application after all services are configured.
 var app = builder.Build();
 
@@ -41,6 +48,8 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
+
+app.UseSession();
 
 // Add authentication middleware (required for Identity).
 app.UseAuthentication();
