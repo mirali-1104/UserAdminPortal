@@ -27,15 +27,12 @@ namespace UserAdminPortal.Controllers
         {
             if (ModelState.IsValid)
             {
-                // Check admin credentials from the database
                 var admin = _context.Admins.FirstOrDefault(a => a.Email == model.Email && a.Password == model.Password);
 
                 if (admin != null)
                 {
-                    // Set session values for admin login
                     HttpContext.Session.SetString("AdminEmail", admin.Email);
                     HttpContext.Session.SetString("AdminName", admin.Name);
-
                     return RedirectToAction("Dashboard");
                 }
                 else
@@ -45,6 +42,7 @@ namespace UserAdminPortal.Controllers
             }
             return View(model);
         }
+
 
         public IActionResult Dashboard()
         {
@@ -63,5 +61,6 @@ namespace UserAdminPortal.Controllers
             HttpContext.Session.Clear();
             return RedirectToAction("Login");
         }
+
     }
 }

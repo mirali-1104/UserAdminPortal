@@ -1,19 +1,39 @@
-﻿@using Microsoft.AspNetCore.Identity;
+﻿@using Microsoft.AspNetCore.Identity
+@using Microsoft.AspNetCore.Http
 @inject SignInManager<User> signInManager;
+@inject IHttpContextAccessor HttpContextAccessor;
 
 <ul class="navbar-nav ms-auto">
-    @if(signInManager.IsSignedIn(User))
+    @{
+        // Get the logged-in admin email from session
+        var adminEmail = HttpContextAccessor.HttpContext?.Session.GetString("AdminEmail");
+    }
+
+    @if (!string.IsNullOrEmpty(adminEmail))
     {
+        // Admin is logged in
+        <li class="nav-item">
+            <a class="nav-link text-dark" asp-controller="Admin" asp-action="Dashboard">Account</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link text-dark" asp-controller="Admin" asp-action="Logout">Logout</a>
+        </li>
+    }
+    else if (signInManager.IsSignedIn(User))
+    {
+        // Regular user is logged in
         <li class="nav-item">
             <a class="nav-link text-dark" asp-controller="Account" asp-action="Logout">Logout</a>
         </li>
     }
-    else{
+    else
+    {
+        // No one is logged in, show Login/Register
         <li class="nav-item">
-            <a class="nav-link" text-dark asp-controller="Account" asp-action="Login">Login</a>
+            <a class="nav-link text-dark" asp-controller="Account" asp-action="Login">Login</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" text-dark asp-controller="Account" asp-action="Register">Register</a>
+            <a class="nav-link text-dark" asp-controller="Account" asp-action="Register">Register</a>
         </li>
     }
 </ul>
