@@ -33,12 +33,12 @@ namespace UserAdminPortal.Controllers
         {
             if (ModelState.IsValid)
             {
+                // Validate admin credentials based on email and password
                 var admin = _context.Admins.FirstOrDefault(a => a.Email == model.Email && a.Password == model.Password);
-
                 if (admin != null)
                 {
+                    // Save the admin's email in session
                     HttpContext.Session.SetString("AdminEmail", admin.Email);
-                    HttpContext.Session.SetString("AdminName", admin.Name);
                     return RedirectToAction("Dashboard");
                 }
                 else
@@ -51,15 +51,15 @@ namespace UserAdminPortal.Controllers
 
         public IActionResult Dashboard()
         {
-            // Check if admin session exists
+            // Ensure the admin is logged in by checking session
             if (string.IsNullOrEmpty(HttpContext.Session.GetString("AdminEmail")))
             {
                 return RedirectToAction("Login");
             }
 
-            ViewBag.AdminName = HttpContext.Session.GetString("AdminName");
+            ViewBag.AdminEmail = HttpContext.Session.GetString("AdminEmail");
 
-            // Fetch users from the database
+            // Fetch users for display on the dashboard
             var users = _userManager.Users.ToList();
             return View(users);
         }
@@ -70,143 +70,46 @@ namespace UserAdminPortal.Controllers
             return RedirectToAction("Login");
         }
 
-        public IActionResult Create()
+        public IActionResult Account()
         {
-            return View();
-        }
-        [HttpPost]
-        public async Task<IActionResult> Create(RegisterViewModel model)
-        {
-
-            if (!ModelState.IsValid)
+            // Retrieve the logged-in admin's email from session
+            string adminEmail = HttpContext.Session.GetString("AdminEmail");
+            if (string.IsNullOrEmpty(adminEmail))
             {
-                User user = new User
-                {
-                    FullName = model.Name,
-                    Email = model.Email,
-                    UserName = model.Email,
-                };
-
-                var result = await _userManager.CreateAsync(user, model.Password);
-
-                if (result.Succeeded)
-                {
-                    Console.WriteLine("User registered successfully"); // Debugging
-                    return RedirectToAction("Dashboard", "Admin");
-                }
-                else
-                {
-                    Console.WriteLine("User registration failed"); // Debugging
-                    foreach (var error in result.Errors)
-                    {
-                        Console.WriteLine(error.Description);
-                        ModelState.AddModelError("", error.Description);
-                    }
-
-                    return View(model);
-                }
-            }
-            else
-            {
-                Console.WriteLine("User registration failed");
+                return RedirectToAction("Login");
             }
 
-            return View(model);
-        }
-        public async Task<IActionResult> UserReport()
-        {
-            var userReport = await _context.Users
-                .Select(user => new UserReportViewModel
-                {
-                    UserId = user.Id,
-                    FullName = user.FullName,
-                    UserName = user.UserName,
-                    Email = user.Email,
-                    PropertyCount = _context.Properties.Count(p => p.UserId == user.Id) // Counting the properties associated with each user
-                })
-                .ToListAsync();
-
-            return View(userReport);
-        }
-
-
-        [HttpPost]
-        public async Task<IActionResult> Delete(string id)
-        {
-            var user = await _userManager.FindByIdAsync(id);
-            if (user != null)
+            // Fetch the admin details from the database using the email
+            var loggedInAdmin = _context.Admins.FirstOrDefault(a => a.Email == adminEmail);
+            if (loggedInAdmin == null)
             {
-                await _userManager.DeleteAsync(user);
+                return RedirectToAction("Login");
             }
-            return RedirectToAction("Dashboard");
+
+            ViewBag.AdminEmail = loggedInAdmin.Email;
+            return View(loggedInAdmin);
         }
 
         [HttpPost]
-        public async Task<IActionResult> DeleteMultiple(List<string> ids)
+        public IActionResult SaveAccount(Admin updatedAdmin)
         {
-            foreach (var id in ids)
+            // Update admin details in the database, including password if provided
+            var existingAdmin = _context.Admins.Find(updatedAdmin.Id);
+            if (existingAdmin != null)
             {
-                var user = await _userManager.FindByIdAsync(id);
-                if (user != null)
+                existingAdmin.Name = updatedAdmin.Name;
+                existingAdmin.UserName = updatedAdmin.UserName;
+                existingAdmin.Email = updatedAdmin.Email;
+
+                // Only update the password if a new one is provided.
+                if (!string.IsNullOrWhiteSpace(updatedAdmin.Password))
                 {
-                    await _userManager.DeleteAsync(user);
+                    existingAdmin.Password = updatedAdmin.Password;
                 }
+
+                _context.SaveChanges();
             }
-            return RedirectToAction("Dashboard");
-        }
-
-        // GET: Admin/Edit/5
-        public async Task<IActionResult> Edit(string id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var user = await _userManager.FindByIdAsync(id);
-            if (user == null)
-            {
-                return NotFound();
-            }
-
-            var model = new EditViewModel
-            {
-                Id = user.Id,
-                UserName = user.UserName,
-                Email = user.Email
-            };
-
-            return View(model);
-        }
-
-        // POST: Admin/Edit/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(EditViewModel model)
-        {
-            if (ModelState.IsValid)
-            {
-                var user = await _userManager.FindByIdAsync(model.Id);
-                if (user != null)
-                {
-                    user.UserName = model.UserName;
-                    user.Email = model.Email;
-
-                    var result = await _userManager.UpdateAsync(user);
-                    if (result.Succeeded)
-                    {
-                        return RedirectToAction("Dashboard");
-                    }
-                    else
-                    {
-                        foreach (var error in result.Errors)
-                        {
-                            ModelState.AddModelError("", error.Description);
-                        }
-                    }
-                }
-            }
-            return View(model);
+            return RedirectToAction("Account");
         }
     }
 }

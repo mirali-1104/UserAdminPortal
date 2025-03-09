@@ -5,21 +5,12 @@
 
 <ul class="navbar-nav ms-auto">
     @{
-        // Get the logged-in admin email from session
         var adminEmail = HttpContextAccessor.HttpContext?.Session.GetString("AdminEmail");
     }
 
     @if (!string.IsNullOrEmpty(adminEmail))
     {
-<<<<<<< HEAD
-=======
-        // Admin is logged in
-        <li class="nav-item">
-            <a class="nav-link fw-bold text-primary" asp-controller="Admin" asp-action="Action">
-                <i class="bi bi-person-circle"></i> Account
-            </a>
-        </li>
->>>>>>> f92c441a2165a5c037dca9d13bad9003e9ac3ca4
+
         <li class="nav-item">
             <a class="nav-link fw-bold text-danger" asp-controller="Admin" asp-action="Logout">
                 <i class="bi bi-box-arrow-right"></i> Logout

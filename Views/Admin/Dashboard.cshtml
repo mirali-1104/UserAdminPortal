@@ -1,6 +1,7 @@
 ﻿@model IEnumerable<User>
 @{
     ViewData["Title"] = "Admin Dashboard";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
 }
 
 <div class="container mt-4">
@@ -94,6 +95,17 @@
                 }
             });
         });
+    </script>
+    <script>
+        // Push a new history state so that the back button triggers our event
+        history.pushState(null, null, location.href);
+        window.onpopstate = function () {
+            if (confirm('Do you want to log out?')) {
+                window.location.href = '/Admin/Logout';
+            } else {
+                history.pushState(null, null, location.href);
+            }
+        };
     </script>
 }
 
