@@ -7,6 +7,7 @@ using UserAdminPortal.ViewModel;
 using Microsoft.AspNetCore.Identity;
 using System.Threading.Tasks;
 using System.Collections.Generic;
+using Microsoft.EntityFrameworkCore;
 
 namespace UserAdminPortal.Controllers
 {
@@ -112,20 +113,22 @@ namespace UserAdminPortal.Controllers
 
             return View(model);
         }
-        public IActionResult UserReport()
+        public async Task<IActionResult> UserReport()
         {
-            // Check if admin session exists
-            if (string.IsNullOrEmpty(HttpContext.Session.GetString("AdminEmail")))
-            {
-                return RedirectToAction("Login");
-            }
+            var userReport = await _context.Users
+                .Select(user => new UserReportViewModel
+                {
+                    UserId = user.Id,
+                    FullName = user.FullName,
+                    UserName = user.UserName,
+                    Email = user.Email,
+                    PropertyCount = _context.Properties.Count(p => p.UserId == user.Id) // Counting the properties associated with each user
+                })
+                .ToListAsync();
 
-            ViewBag.AdminName = HttpContext.Session.GetString("AdminName");
-
-            // Fetch users from the database
-            var users = _userManager.Users.ToList();
-            return View(users);
+            return View(userReport);
         }
+
 
         [HttpPost]
         public async Task<IActionResult> Delete(string id)

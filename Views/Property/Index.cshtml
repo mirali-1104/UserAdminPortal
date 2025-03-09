@@ -1,0 +1,112 @@
+﻿@model IEnumerable<UserAdminPortal.Models.Property>
+@{
+    ViewData["Title"] = "Your Properties";
+}
+
+<h2>Your Properties</h2>
+
+<div class="row">
+    <div class="col-md-6">
+        <a href="/Property/Add" class="btn btn-primary">Add Properties</a>
+    </div>
+</div>
+
+<form id="delete-form" action="/Property/DeleteMultiple" method="post">
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Select</th>
+                <th>ID</th>
+                <th>Property Name</th>
+                <th>Title</th>
+                <th>Price</th>
+                <th>Description</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var property in Model)
+            {
+                <tr>
+                    <td>
+                        <input type="checkbox" name="ids" value="@property.PropertyId" class="delete-checkbox" />
+                    </td>
+                    <td>@property.PropertyId</td>
+                    <td>@property.PropertyName</td>
+                    <td>@property.Title</td>
+                    <td>@property.Price</td>
+                    <td>@property.Description</td>
+                    <td>
+                        <a href="/Property/Edit/@property.PropertyId" class="btn btn-warning btn-sm">Edit</a>
+                        <button type="button" class="btn btn-danger btn-sm delete-btn" data-property-id="@property.PropertyId">Delete</button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    <button type="submit" class="btn btn-danger">Delete Selected</button>
+</form>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+ 
+                    $('.delete-btn').click(function () {
+            var PropertyId = $(this).data('property-id');  
+
+            if (confirm('Are you sure you want to delete this property?')) {
+                    $.ajax({
+                    url: '/Property/Delete/' + PropertyId,  
+                    type: 'POST',
+                    headers: {
+                        "RequestVerificationToken": $('input[name="__RequestVerificationToken"]').val()  
+                    },
+                    success: function (result) {
+                        alert('Property deleted successfully.');
+                        location.reload();
+                    },
+                    error: function () {
+                        alert('Error deleting property.');
+                    }
+                });
+            }
+        });
+
+
+          
+                    $('#delete-form').submit(function (e) {
+            e.preventDefault();
+
+            var selectedIds = [];
+            $('.delete-checkbox:checked').each(function () {
+                selectedIds.push(parseInt($(this).val()));  
+            });
+
+            if (selectedIds.length === 0) {
+                alert('Please select at least one property to delete.');
+                return;
+            }
+
+            if (confirm('Are you sure you want to delete the selected properties?')) {
+                $.ajax({
+                    url: '/Property/DeleteMultiple',
+                    type: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify(selectedIds), 
+                    headers: {
+                        "RequestVerificationToken": $('input[name="__RequestVerificationToken"]').val()  
+                    },
+                    success: function (result) {
+                        alert('Selected properties deleted successfully.');
+                        location.reload();
+                    },
+                    error: function () {
+                        alert('Error deleting properties.');
+                    }
+                });
+            }
+        });
+
+        });
+    </script>
+}

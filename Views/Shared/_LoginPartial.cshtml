@@ -11,16 +11,15 @@
 
     @if (!string.IsNullOrEmpty(adminEmail))
     {
-        // Admin is logged in
-        <li class="nav-item">
-            <a class="nav-link text-dark" asp-controller="Admin" asp-action="Action">Account</a>
-        </li>
         <li class="nav-item">
             <a class="nav-link text-dark" asp-controller="Admin" asp-action="Logout">Logout</a>
         </li>
     }
     else if (signInManager.IsSignedIn(User))
     {
+        <li class="nav-item"> 
+            <a class="nav-link text-dark" asp-controller="Property" asp-action="Index">Manage Properties</a>
+        </li>
         // Regular user is logged in
         <li class="nav-item">
             <a class="nav-link text-dark" asp-controller="Account" asp-action="Logout">Logout</a>
