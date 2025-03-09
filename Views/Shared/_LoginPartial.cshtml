@@ -13,30 +13,47 @@
     {
         // Admin is logged in
         <li class="nav-item">
-            <a class="nav-link text-dark" asp-controller="Admin" asp-action="Action">Account</a>
+            <a class="nav-link fw-bold text-primary" asp-controller="Admin" asp-action="Action">
+                <i class="bi bi-person-circle"></i> Account
+            </a>
         </li>
         <li class="nav-item">
-            <a class="nav-link text-dark" asp-controller="Admin" asp-action="Logout">Logout</a>
+            <a class="nav-link fw-bold text-danger" asp-controller="Admin" asp-action="Logout">
+                <i class="bi bi-box-arrow-right"></i> Logout
+            </a>
         </li>
     }
     else if (signInManager.IsSignedIn(User))
     {
         // Regular user is logged in
         <li class="nav-item">
-            <a class="nav-link text-dark" asp-controller="Account" asp-action="Logout">Logout</a>
+            <a class="nav-link fw-bold text-danger" asp-controller="Account" asp-action="Logout">
+                <i class="bi bi-box-arrow-right"></i> Logout
+            </a>
         </li>
     }
     else
     {
         // No one is logged in, show Login/Register
         <li class="nav-item">
-            <a class="nav-link text-dark" asp-controller="Home" asp-action="ContactUs">Contact Us</a>
+            <a class="nav-link fw-bold text-dark" asp-controller="Home" asp-action="ContactUs">
+                <i class="bi bi-envelope"></i> Contact Us
+            </a>
         </li>
-        <li class="nav-item">
-            <a class="nav-link text-dark" asp-controller="Account" asp-action="Login">Login</a>
+        <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle fw-bold text-dark" href="#" id="loginDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                <i class="bi bi-box-arrow-in-right"></i> Login
+            </a>
+            <ul class="dropdown-menu shadow-sm" aria-labelledby="loginDropdown">
+                <li><a class="dropdown-item fw-bold text-primary" asp-controller="Admin" asp-action="Login">Admin</a></li>
+                <li><a class="dropdown-item fw-bold text-success" asp-controller="Account" asp-action="Login">User</a></li>
+            </ul>
         </li>
+
         <li class="nav-item">
-            <a class="nav-link text-dark" asp-controller="Account" asp-action="Register">Register</a>
+            <a class="nav-link fw-bold text-success" asp-controller="Account" asp-action="Register">
+                <i class="bi bi-person-plus"></i> Register
+            </a>
         </li>
     }
 </ul>

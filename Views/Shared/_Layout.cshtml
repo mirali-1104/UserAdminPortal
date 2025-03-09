@@ -14,20 +14,26 @@
 </head>
 <body>
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+        <nav class="navbar navbar-expand-lg navbar-light shadow-sm" style="background: linear-gradient(135deg, #A1C4FD, #C2E9FB);">
             <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">UserAdminPortal</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
+                <a class="navbar-brand fw-bold text-dark" asp-area="" asp-controller="Home" asp-action="Index">
+                    <i class="bi bi-house-door"></i> TrueValue Homes
+                </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                        aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
+                <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+                    <ul class="navbar-nav">
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                            <a class="nav-link text-dark fw-semibold hover-effect" asp-area="" asp-controller="Home" asp-action="Index">
+                                <i class="bi bi-house-fill"></i> Home
+                            </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Properties</a>
+                            <a class="nav-link text-dark fw-semibold hover-effect" asp-area="" asp-controller="Home" asp-action="Privacy">
+                                <i class="bi bi-building"></i> Properties
+                            </a>
                         </li>
                         <partial name="_LoginPartial" />
                     </ul>
@@ -35,6 +41,35 @@
             </div>
         </nav>
     </header>
+
+    <style>
+        .navbar {
+            transition: all 0.3s ease-in-out;
+        }
+
+        .hover-effect {
+            transition: color 0.3s ease-in-out;
+        }
+
+            .hover-effect:hover {
+                color: #007BFF !important; /* Soft Blue on hover */
+            }
+    </style>
+
+    <style>
+        .navbar {
+            transition: all 0.3s ease-in-out;
+        }
+
+        .hover-effect {
+            transition: color 0.3s ease-in-out;
+        }
+
+            .hover-effect:hover {
+                color: #FFC107 !important; /* Golden Yellow on hover */
+            }
+    </style>
+
     <div class="container">
         <main role="main" class="pb-3">
             @RenderBody()

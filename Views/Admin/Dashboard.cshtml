@@ -3,48 +3,56 @@
     ViewData["Title"] = "Admin Dashboard";
 }
 
-<h2>Welcome to Admin Dashboard</h2>
+<div class="container mt-4">
+    <h2 class="text-center text-primary fw-bold">Welcome to Admin Dashboard</h2>
 
-<div class="row">
-    <div class="col-md-6">
-        <a href="/Admin/Create" class="btn btn-primary">Create</a>
+    <div class="row mt-4">
+        <div class="col-md-6">
+            <a href="/Admin/Create" class="btn btn-primary shadow-lg"><i class="bi bi-plus-circle"></i> Create User</a>
+        </div>
+        <div class="col-md-6 text-end">
+            <a href="/Admin/UserReport" class="btn btn-secondary shadow"><i class="bi bi-file-earmark-bar-graph"></i> User Report</a>
+        </div>
     </div>
-    <div class="col-md-6 text-right">
-        <a href="/Admin/UserReport" class="btn btn-secondary">User Report</a>
+
+    <div class="table-responsive mt-4">
+        <form id="delete-form" action="/Admin/DeleteMultiple" method="post">
+            <table class="table table-hover table-bordered align-middle">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Select</th>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var user in Model)
+                    {
+                        <tr>
+                            <td class="text-center">
+                                <input type="checkbox" name="ids" value="@user.Id" class="form-check-input delete-checkbox" />
+                            </td>
+                            <td>@user.Id</td>
+                            <td>@user.UserName</td>
+                            <td>@user.Email</td>
+                            <td class="text-center">
+                                <a href="/Admin/Edit/@user.Id" class="btn btn-warning btn-sm">
+                                    <i class="bi bi-pencil-square"></i> Edit
+                                </a>
+                                <button type="button" class="btn btn-danger btn-sm delete-btn" data-user-id="@user.Id">
+                                    <i class="bi bi-trash"></i> Delete
+                                </button>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+            <button type="submit" class="btn btn-danger mt-3"><i class="bi bi-trash"></i> Delete Selected</button>
+        </form>
     </div>
 </div>
-
-<form id="delete-form" action="/Admin/DeleteMultiple" method="post">
-    <table class="table table-striped">
-        <thead>
-            <tr>
-                <th>Select</th>
-                <th>ID</th>
-                <th>Name</th>
-                <th>Email</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var user in Model)
-            {
-                <tr>
-                    <td>
-                        <input type="checkbox" name="ids" value="@user.Id" class="delete-checkbox" />
-                    </td>
-                    <td>@user.Id</td>
-                    <td>@user.UserName</td>
-                    <td>@user.Email</td>
-                    <td>
-                        <a href="/Admin/Edit/@user.Id" class="btn btn-warning btn-sm">Edit</a>
-                        <button type="button" class="btn btn-danger btn-sm delete-btn" data-user-id="@user.Id">Delete</button>
-                    </td>
-                </tr>
-            }
-        </tbody>
-    </table>
-    <button type="submit" class="btn btn-danger">Delete Selected</button>
-</form>
 
 @section Scripts {
     <script>
@@ -87,5 +95,56 @@
             });
         });
     </script>
+}
+
+<style>
+    body {
+        background: linear-gradient(135deg, #eef2f3, #dbe6f6);
     }
+
+    .table {
+        border-radius: 8px;
+        overflow: hidden;
+    }
+
+        .table th {
+            background: #4a90e2 !important;
+            color: white !important;
+            text-align: center;
         }
+
+        .table tbody tr:hover {
+            background: #f8f9fa !important;
+        }
+
+    .btn-primary {
+        background-color: #4a90e2 !important;
+        border: none;
+    }
+
+        .btn-primary:hover {
+            background-color: #357ab7 !important;
+        }
+
+    .btn-warning {
+        background-color: #f4a62a !important;
+        border: none;
+    }
+
+        .btn-warning:hover {
+            background-color: #d4881e !important;
+        }
+
+    .btn-danger {
+        background-color: #dc3545 !important;
+        border: none;
+    }
+
+        .btn-danger:hover {
+            background-color: #a71d2a !important;
+        }
+
+    .delete-checkbox {
+        transform: scale(1.3);
+    }
+</style>
