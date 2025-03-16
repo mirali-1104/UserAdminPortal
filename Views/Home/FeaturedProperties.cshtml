@@ -1,0 +1,26 @@
+﻿@model IEnumerable<Property>
+
+@{
+    ViewData["Title"] = "Featured Properties";
+}
+
+<h2 class="text-center mb-4">Featured Properties</h2>
+
+<div class="container">
+    <div class="row row-cols-1 row-cols-md-3 g-4">
+        @foreach (var property in Model) 
+        {
+            <div class="col">
+                <div class="card h-100 shadow-sm">
+                    <img src="@Url.Content(property.Image)" class="card-img-top" alt="@property.Title">
+                    <div class="card-body">
+                        <h5 class="card-title text-primary">@property.Title</h5>
+                        <p class="text-muted mb-1">@string.Format("${0:N0}", property.Price)</p>
+                        <p class="card-text">@property.Description</p>
+                        <a href="@Url.Action("Details", "Property", new { id = property.PropertyId })" class="btn btn-primary">View Details</a>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
