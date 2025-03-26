@@ -37,7 +37,7 @@ namespace UserAdminPortal.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Add(PropertyViewModel model)
         {
-            if (!ModelState.IsValid)
+            if (ModelState.IsValid)
             {
                 return View(model);
             }

@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
+using UserAdminPortal.Data;
 using UserAdminPortal.Models;
 using UserAdminPortal.ViewModel;
 
@@ -10,12 +12,58 @@ namespace UserAdminPortal.Controllers
     {
         private readonly SignInManager<User> signInManager;
         private readonly UserManager<User> userManager;
+        private readonly AppDbContext _context;
 
-        public AccountController(SignInManager<User> signInManager, UserManager<User> userManager)
+
+        public AccountController(AppDbContext context, SignInManager<User> signInManager, UserManager<User> userManager)
         {
             this.signInManager = signInManager;
             this.userManager = userManager;
+            _context = context;
         }
+
+        public IActionResult UserAccount()
+        {
+            var userEmail = User.Identity.Name;
+            var user = _context.Users.FirstOrDefault(u => u.Email == userEmail);
+
+            if (user != null)
+            {
+                var model = new UserViewModel
+                {
+                    Name = user.FullName,
+                    Email = user.Email
+                };
+                return View(model);
+            }
+
+            return RedirectToAction("Login");
+        }
+        [HttpPost]
+        public IActionResult UpdateProfile(UserViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var userEmail = User.Identity.Name;
+                var user = _context.Users.FirstOrDefault(u => u.Email == userEmail);
+
+                if (user != null)
+                {
+                    user.FullName = model.Name;
+
+                    if (!string.IsNullOrEmpty(model.Password) && model.Password == model.ConfirmPassword)
+                    {
+                        user.Password = model.Password;  // Ensure password hashing here
+                    }
+
+                    _context.SaveChanges();
+                    return RedirectToAction("UserAccount");
+                }
+            }
+
+            return View("UserAccount", model);
+        }
+
 
         public IActionResult Login()
         {
